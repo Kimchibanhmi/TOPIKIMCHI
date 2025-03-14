@@ -117,11 +117,12 @@ document.addEventListener('DOMContentLoaded', () => {
       });
   }
 
-  // 다음 단어 버튼
+  // 다음 단어 버튼 이벤트 수정
   nextWordButton.addEventListener('click', () => {
     hideAllPopups();
     resetGame();
-    startTimer();
+    // startTimer() 대신 resumeTimer() 사용
+    resumeTimer();
   });
 
   // 다시하기 버튼
@@ -139,9 +140,12 @@ document.addEventListener('DOMContentLoaded', () => {
     gameScreen.classList.remove('hidden');
     console.log('게임 화면 표시됨');
 
+    // 맞힌 개수 초기화
+    correctCount = 0;
+
     // 게임 초기화
     resetGame();
-    startTimer();
+    startTimer(); // 처음 시작할 때만 타이머 시작
   }
 
   // 게임 리셋
@@ -570,21 +574,36 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // 타이머 시작
+  // 타이머 관련 변수 추가
+  let timerPaused = false;
+
+  // 타이머 시작 함수 수정
   function startTimer() {
     clearInterval(timer);
-    timeLeft = 10 * 60;
+    timeLeft = 10 * 60; // 초기 10분 설정
     updateTimerDisplay();
 
     timer = setInterval(() => {
-      timeLeft--;
-      updateTimerDisplay();
+      if (!timerPaused) {
+        timeLeft--;
+        updateTimerDisplay();
 
-      if (timeLeft <= 0) {
-        clearInterval(timer);
-        handleTimeUp(); // 타이머가 끝나면 handleTimeUp 함수 호출
+        if (timeLeft <= 0) {
+          clearInterval(timer);
+          handleTimeUp();
+        }
       }
     }, 1000);
+  }
+
+  // 타이머 일시정지 함수 추가
+  function pauseTimer() {
+    timerPaused = true;
+  }
+
+  // 타이머 재개 함수 추가
+  function resumeTimer() {
+    timerPaused = false;
   }
 
   // 타이머 표시 업데이트
@@ -596,11 +615,12 @@ document.addEventListener('DOMContentLoaded', () => {
       .padStart(2, '0')}`;
   }
 
-  // 타이머 종료 처리
+  // 타이머 종료 처리 함수 수정
   function handleTimeUp() {
     isGameOver = true;
     clearInterval(timer);
 
+    // 맞힌 개수 표시
     document.getElementById('correct-count').textContent = correctCount;
 
     // 약간의 딜레이 후에 게임 종료 팝업 표시
@@ -610,10 +630,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }, 1000);
   }
 
-  // 성공 처리
+  // 성공 처리 함수 수정
   function handleWin() {
     isGameOver = true;
-    clearInterval(timer);
+    pauseTimer(); // 타이머 일시정지
     correctCount++; // 맞힌 개수 증가
 
     const currentWordData = wordData.find((word) => word.word === currentWord);
@@ -1048,7 +1068,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // 다시 시작하기 버튼 클릭
+  // 다시 시작하기 버튼 이벤트 리스너 수정
   restartButton.addEventListener('click', () => {
     hideAllPopups();
     difficultyPopup.classList.add('show');
