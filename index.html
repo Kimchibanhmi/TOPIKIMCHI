@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TOPIKIMCHI - TOPIK 단어 게임</title>
+    <link rel="stylesheet" href="style.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Gamja+Flower&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="icon" href="./kimchibanhmi.png" type="image/png" />
+  </head>
+  <body>
+    <!-- 시작 화면 -->
+    <div id="start-screen">
+      <h1 class="logo">TOPIKIMCHI</h1>
+      <button id="start-button">게임 시작하기</button>
+      <div class="creator-info">
+        Version 1.0 <br />
+        Created by <span class="creator-name">kimchibanhmi</span>
+      </div>
+    </div>
+
+    <!-- 게임 방법 팝업 -->
+    <div id="instructions-popup" class="popup">
+      <div class="popup-content">
+        <h2>게임 방법!</h2>
+        <p>TOPIK에서 자주 나오는 단어를 6번의 시도로 맞혀보세요!</p>
+        <p>🟩 네모 칸의 개수는 단어의 글자 수와 같습니다.</p>
+        <p>🔴 글자가 정확한 위치와 맞춤법이 맞으면 빨간색으로 표시됩니다.</p>
+        <p>🟡 맞춤법은 맞지만 위치가 다르면 노란색으로 표시됩니다.</p>
+        <p>⚪ 맞춤법이 틀리면 짙은회색으로 표시됩니다.</p>
+        <p>
+          📝 네모 칸 중에 V 칸이 나타나면 스페이스바를 입력하고 다음 단어를 계속
+          입력해주세요.
+        </p>
+        <p>
+          <strong>난이도 선택:</strong><br />
+          쉬움 – TOPIK 1, 2<br />
+          중간 – TOPIK 3, 4<br />
+          어려움 – TOPIK 5, 6
+        </p>
+        <p>
+          10분의 시간이 주어집니다. 10분동안 최대한 많이 맞춰보세요! 파이팅!!
+        </p>
+        <p class="small-text">
+          kimchibanhmi는 항상 여러분들을 응원합니다! 꼭 시험에 합격하시기
+          바랍니다.<br />
+          건의 및 문의사항은 kimchibanhmi123@gmail.com ! 감사합니다!
+        </p>
+        <button id="next-button">다음</button>
+      </div>
+    </div>
+
+    <!-- 난이도 선택 팝업 -->
+    <div id="difficulty-popup" class="popup">
+      <div class="popup-content">
+        <h2>난이도 선택</h2>
+        <div class="difficulty-buttons">
+          <button id="easy-button" class="difficulty-button">
+            EASY - TOPIK 1, 2
+          </button>
+          <button id="intermediate-button" class="difficulty-button" disabled>
+            INTERMEDIATE - TOPIK 3, 4
+          </button>
+          <button id="advanced-button" class="difficulty-button" disabled>
+            ADVANCED - TOPIK 5, 6
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 메인 게임 화면 -->
+    <div id="game-screen" class="hidden">
+      <div class="top-bar">
+        <h2 class="logo-small">TOPIKIMCHI</h2>
+        <div id="timer">10:00</div>
+      </div>
+
+      <div id="game-board"></div>
+
+      <div id="keyboard">
+        <div class="keyboard-row">
+          <button class="key" data-key="q">q</button>
+          <button class="key" data-key="w">w</button>
+          <button class="key" data-key="e">e</button>
+          <button class="key" data-key="r">r</button>
+          <button class="key" data-key="t">t</button>
+          <button class="key" data-key="y">y</button>
+          <button class="key" data-key="u">u</button>
+          <button class="key" data-key="i">i</button>
+          <button class="key" data-key="o">o</button>
+          <button class="key" data-key="p">p</button>
+        </div>
+        <div class="keyboard-row">
+          <button class="key" data-key="a">a</button>
+          <button class="key" data-key="s">s</button>
+          <button class="key" data-key="d">d</button>
+          <button class="key" data-key="f">f</button>
+          <button class="key" data-key="g">g</button>
+          <button class="key" data-key="h">h</button>
+          <button class="key" data-key="j">j</button>
+          <button class="key" data-key="k">k</button>
+          <button class="key" data-key="l">l</button>
+        </div>
+        <div class="keyboard-row">
+          <button class="key" data-key="z">z</button>
+          <button class="key" data-key="x">x</button>
+          <button class="key" data-key="c">c</button>
+          <button class="key" data-key="v">v</button>
+          <button class="key" data-key="b">b</button>
+          <button class="key" data-key="n">n</button>
+          <button class="key" data-key="m">m</button>
+          <button class="key wide-key" data-key="Backspace">⌫</button>
+        </div>
+        <div class="keyboard-row">
+          <button class="key" data-key="ă">ă</button>
+          <button class="key" data-key="â">â</button>
+          <button class="key" data-key="ê">ê</button>
+          <button class="key" data-key="ô">ô</button>
+          <button class="key" data-key="ơ">ơ</button>
+          <button class="key" data-key="ư">ư</button>
+          <button class="key" data-key="đ">đ</button>
+          <button class="key" data-key=" ">Space</button>
+          <button class="key wide-key" data-key="Enter">Enter</button>
+        </div>
+        <div class="keyboard-row">
+          <button class="key tone-key" data-key="tone-1">ˋ</button>
+          <button class="key tone-key" data-key="tone-2">ˊ</button>
+          <button class="key tone-key" data-key="tone-3">˜</button>
+          <button class="key tone-key" data-key="tone-4">ʼ</button>
+          <button class="key tone-key" data-key="tone-5">.</button>
+        </div>
+      </div>
+
+      <div class="creator-info game-creator-info">
+        Version 1.0 <br />
+        Created by <span class="creator-name">kimchibanhmi</span>
+      </div>
+    </div>
+
+    <!-- 성공 팝업 -->
+    <div id="success-popup" class="popup">
+      <div class="popup-content">
+        <h2>축하합니다!</h2>
+        <div id="word-info">
+          <p><strong>베트남어:</strong> <span id="viet-word"></span></p>
+          <p><strong>한국어:</strong> <span id="korean-word"></span></p>
+          <div class="example">
+            <p>
+              <strong>베트남어 예문:</strong> <span id="viet-example"></span>
+            </p>
+            <p>
+              <strong>한국어 예문:</strong> <span id="korean-example"></span>
+            </p>
+          </div>
+        </div>
+        <button id="next-word-button">다음 문제 도전하기</button>
+      </div>
+    </div>
+
+    <!-- 실패 팝업 -->
+    <div id="fail-popup" class="popup">
+      <div class="popup-content">
+        <h2>아쉽네요!</h2>
+        <p>6번의 시도 안에 단어를 맞추지 못했습니다.</p>
+        <p>정답은: <span id="answer-word"></span></p>
+        <p>다시 도전해 보세요! 포기하지 마세요!</p>
+        <button id="retry-button">다시하기</button>
+      </div>
+    </div>
+
+    <script src="words.js"></script>
+    <script src="script.js"></script>
+  </body>
+</html>
