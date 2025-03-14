@@ -14,11 +14,14 @@ document.addEventListener('DOMContentLoaded', () => {
   const gameBoard = document.getElementById('game-board');
   const keyboard = document.getElementById('keyboard');
   const timerDisplay = document.getElementById('timer');
+  const timeUpPopup = document.getElementById('time-up-popup');
+  const restartButton = document.getElementById('restart-button');
 
   // words.js에서 데이터 로드
   let wordData = [];
   let currentDifficulty = 'easy'; // 기본 난이도
   let currentWordIndex = 0; // 현재 단어 인덱스 초기화
+  let correctCount = 0; // 맞힌 개수 추적
 
   // 게임 시작 시 난이도에 따른 데이터 로드 함수
   function loadWordDataByDifficulty(difficulty) {
@@ -567,10 +570,51 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
+  // 타이머 시작
+  function startTimer() {
+    clearInterval(timer);
+    timeLeft = 10 * 60;
+    updateTimerDisplay();
+
+    timer = setInterval(() => {
+      timeLeft--;
+      updateTimerDisplay();
+
+      if (timeLeft <= 0) {
+        clearInterval(timer);
+        handleTimeUp(); // 타이머가 끝나면 handleTimeUp 함수 호출
+      }
+    }, 1000);
+  }
+
+  // 타이머 표시 업데이트
+  function updateTimerDisplay() {
+    const minutes = Math.floor(timeLeft / 60);
+    const seconds = timeLeft % 60;
+    timerDisplay.textContent = `${minutes.toString().padStart(2, '0')}:${seconds
+      .toString()
+      .padStart(2, '0')}`;
+  }
+
+  // 타이머 종료 처리
+  function handleTimeUp() {
+    isGameOver = true;
+    clearInterval(timer);
+
+    document.getElementById('correct-count').textContent = correctCount;
+
+    // 약간의 딜레이 후에 게임 종료 팝업 표시
+    setTimeout(() => {
+      hideAllPopups();
+      timeUpPopup.classList.add('show');
+    }, 1000);
+  }
+
   // 성공 처리
   function handleWin() {
     isGameOver = true;
     clearInterval(timer);
+    correctCount++; // 맞힌 개수 증가
 
     const currentWordData = wordData.find((word) => word.word === currentWord);
 
@@ -603,32 +647,6 @@ document.addEventListener('DOMContentLoaded', () => {
       hideAllPopups();
       failPopup.classList.add('show');
     }, 1000);
-  }
-
-  // 타이머 시작
-  function startTimer() {
-    clearInterval(timer);
-    timeLeft = 10 * 60;
-    updateTimerDisplay();
-
-    timer = setInterval(() => {
-      timeLeft--;
-      updateTimerDisplay();
-
-      if (timeLeft <= 0) {
-        clearInterval(timer);
-        handleLoss();
-      }
-    }, 1000);
-  }
-
-  // 타이머 표시 업데이트
-  function updateTimerDisplay() {
-    const minutes = Math.floor(timeLeft / 60);
-    const seconds = timeLeft % 60;
-    timerDisplay.textContent = `${minutes.toString().padStart(2, '0')}:${seconds
-      .toString()
-      .padStart(2, '0')}`;
   }
 
   // 게임 보드 클릭 이벤트 리스너 추가 (타일 선택 기능)
@@ -1029,4 +1047,11 @@ document.addEventListener('DOMContentLoaded', () => {
       // ... existing code ...
     }
   }
+
+  // 다시 시작하기 버튼 클릭
+  restartButton.addEventListener('click', () => {
+    hideAllPopups();
+    difficultyPopup.classList.add('show');
+    correctCount = 0; // 맞힌 개수 초기화
+  });
 });
